@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +17,9 @@ import java.util.stream.Collectors;
 
 public class Solution {
 
+  // in memory cache
+  Map<String, List<Voter>> constituenciesToVoterList = new HashMap<>();
+
   private final Function<String, Candidate> mapToCandidate = line -> {
     String[] p = line.split(",");
     Candidate item = new Candidate();
@@ -23,38 +27,29 @@ public class Solution {
     item.setName(p[1]);
     return item;
   };
-  private final Function<String, Voter> mapToVoter = line -> {
-    String[] p = line.split(",");
-    Voter item = new Voter();
-    item.setVoterId(p[0]);
-    item.setConstituencyName(p[1]);
-    item.setPollingStation(p[2]);
-    if (p.length == 4 && p[3] != null && p[3].trim().length() > 0) {
-      item.setCandidateName(p[3]);
-    }
-    return item;
-  };
 
   public ElectionResult execute(Path candidateFile, Path votingFile) throws IOException {
     ElectionResult resultData = new ElectionResult(new HashMap<>());
 
+    // construct candidateList
     InputStream inputFS = new FileInputStream(candidateFile.toFile());
     BufferedReader br = new BufferedReader(new InputStreamReader(inputFS));
-
     List<Candidate> candidateList = br
         .lines()
         .skip(1)
         .map(mapToCandidate)
         .collect(Collectors.toList());
+    br.close();
 
+    // construct in memory cache to hold voters constituency wise
     InputStream inputFSForVoter = new FileInputStream(votingFile.toFile());
     BufferedReader brForVoter = new BufferedReader(new InputStreamReader(inputFSForVoter));
-
-    List<Voter> voterList = brForVoter
+    brForVoter
         .lines()
         .skip(1)
-        .map(mapToVoter)
-        .collect(Collectors.toList());
+        .forEach(this::addVoterToConstituency);
+    brForVoter.close();
+
 
     List<String> constituencies = candidateList.stream()
         .map(Candidate::getConstituency)
@@ -62,10 +57,7 @@ public class Solution {
         .collect(Collectors.toList());
 
     for (String constituencyName : constituencies) {
-      List<Voter> voterByConstituency =
-          voterList.stream()
-              .filter(a -> a.constituencyName.equals(constituencyName))
-              .collect(Collectors.toList());
+      List<Voter> voterByConstituency = constituenciesToVoterList.get(constituencyName);
 
       Map<String, Integer> candidateVoteCount = new HashMap<>();
       for (Voter voter : voterByConstituency) {
@@ -103,9 +95,18 @@ public class Solution {
       resultData.addConstituencyResult(constituencyName, constituencyResult);
     }
 
-    br.close();
-    brForVoter.close();
     return resultData;
+  }
+
+  private void addVoterToConstituency(String a) {
+    Voter voter = buildVoter(a);
+    String constituencyName = voter.getConstituencyName();
+    List<Voter> voterByConstituency = constituenciesToVoterList.get(constituencyName);
+    if (voterByConstituency == null) {
+      voterByConstituency = new ArrayList<>();
+    }
+    voterByConstituency.add(voter);
+    constituenciesToVoterList.put(constituencyName, voterByConstituency);
   }
 
   private String findWinner(List<CandidateVotes> candidateVotes) {
@@ -117,6 +118,18 @@ public class Solution {
     }
 
     return winner;
+  }
+
+  private Voter buildVoter(String line) {
+    String[] p = line.split(",");
+    Voter item = new Voter();
+    item.setVoterId(p[0]);
+    item.setConstituencyName(p[1]);
+    item.setPollingStation(p[2]);
+    if (p.length == 4 && p[3] != null && p[3].trim().length() > 0) {
+      item.setCandidateName(p[3]);
+    }
+    return item;
   }
 
 }
