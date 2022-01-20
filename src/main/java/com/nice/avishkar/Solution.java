@@ -102,15 +102,21 @@ public class Solution {
 
 	private String findWinner(List<CandidateVotes> candidateVotes) {
 
-		String winner = candidateVotes
-				.stream()
-				.max(Comparator.comparing(CandidateVotes::getVotes))
-				.orElseGet(() -> new CandidateVotes("NO_WINNER",0))
-				.getCandidateName();
+//		String winner = candidateVotes
+//				.stream()
+//				.max(Comparator.comparing(CandidateVotes::getVotes))
+//				.orElseGet(() -> new CandidateVotes("NO_WINNER",0))
+//				.getCandidateName();
 
-		if(winner.equals("NOTA")) {
-			  // TODO
-		}
+		List<CandidateVotes> candidateVotesWithoutNOTA = candidateVotes
+															.stream()
+															.filter( c -> !c.getCandidateName().equalsIgnoreCase("NOTA"))
+															.collect(Collectors.toList());
+
+		String winner = "NO_WINNER";
+		if(candidateVotesWithoutNOTA.get(0).getVotes() != candidateVotesWithoutNOTA.get(1).getVotes())
+			winner = candidateVotesWithoutNOTA.get(0).getCandidateName();
+
 		return winner;
 	}
 
