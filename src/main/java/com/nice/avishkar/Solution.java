@@ -4,6 +4,7 @@ import com.nice.pojos.Candidate;
 import com.nice.pojos.CandidateVotes;
 import com.nice.pojos.ConstituencyResult;
 import com.nice.pojos.Voter;
+import com.nice.util.ElectionHelper;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -24,11 +25,6 @@ public class Solution {
   // in memory cache
   Map<String, List<Voter>> constituenciesToVoterList = new HashMap<>();
 
-  private final Function<String, Candidate> mapToCandidate = line -> {
-    String[] p = line.split(",");
-    return Candidate.createCandidate(p[0],p[1]);
-  };
-
   public ElectionResult execute(Path candidateFile, Path votingFile) throws IOException {
     ElectionResult resultData = new ElectionResult(new HashMap<>());
 
@@ -38,7 +34,7 @@ public class Solution {
     List<Candidate> candidateList = br
         .lines()
         .skip(1)
-        .map(mapToCandidate)
+        .map(ElectionHelper.STR_TO_CANDIDATE_FUNCTION)
         .collect(Collectors.toList());
     br.close();
 
