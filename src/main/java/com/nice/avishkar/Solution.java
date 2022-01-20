@@ -7,7 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -32,6 +35,36 @@ public class Solution {
 				.skip(1)
 				.map(mapToVoter)
 				.collect(Collectors.toList());
+
+		// get distinct constituencies
+		List<String> constituencies = candidateList.stream()
+						.map(Candidate::getConstituency)
+								.distinct()
+										.collect(Collectors.toList());
+
+		Map<String, Map<String,Integer>> result = new HashMap<>();
+
+		//List<String> voterId =
+		for (String consti: constituencies) {
+			List<Voter> voterByConstituency =
+			voterList.stream()
+					.filter(a -> a.constituencyName.equals(consti))
+					.collect(Collectors.toList());
+
+			Map<String, Integer> candidateVoteCount = new HashMap<>();
+			//List<CandidateVotes> cv = new ArrayList<>();
+			for(Voter voter: voterByConstituency) {
+				String candidateName = voter.getCandidateName();
+				Integer voteCount = candidateVoteCount.get(candidateName);
+				if (voteCount == null) {
+					candidateVoteCount.put(candidateName, 1);
+				} else {
+					candidateVoteCount.put(candidateName, ++voteCount);
+				}
+			}
+			result.put(consti, candidateVoteCount);
+
+		}
 
 		br.close();
 

@@ -4,7 +4,7 @@ public class Voter {
 
   String voterId;
   String constituencyName;
-  String PollingStation;
+  String pollingStation;
   String candidateName;
 
   public String getVoterId() {
@@ -24,11 +24,11 @@ public class Voter {
   }
 
   public String getPollingStation() {
-    return PollingStation;
+    return pollingStation;
   }
 
   public void setPollingStation(String pollingStation) {
-    PollingStation = pollingStation;
+    this.pollingStation = pollingStation;
   }
 
   public String getCandidateName() {
@@ -39,3 +39,6 @@ public class Voter {
     this.candidateName = candidateName;
   }
 }
+
+
+// candidate -> votes
