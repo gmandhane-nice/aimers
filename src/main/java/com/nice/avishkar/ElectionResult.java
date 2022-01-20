@@ -31,5 +31,10 @@ public class ElectionResult {
 		builder.append("]");
 		return builder.toString();
 	}
+
+	public void addConstituencyResult(String constituencyName, ConstituencyResult result) {
+		resultData.put(constituencyName, result);
+	}
+
 	
 }

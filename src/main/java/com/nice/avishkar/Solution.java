@@ -8,6 +8,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +20,7 @@ import java.util.stream.Collectors;
 public class Solution {
 
 	public ElectionResult execute(Path candidateFile, Path votingFile) throws IOException {
-		ElectionResult resultData = new ElectionResult();
+		ElectionResult resultData = new ElectionResult(new HashMap<>());
 
 		InputStream inputFS = new FileInputStream(candidateFile.toFile());
 		BufferedReader br = new BufferedReader(new InputStreamReader(inputFS));
@@ -70,13 +72,31 @@ public class Solution {
 											.map(a -> new CandidateVotes(a.getKey(), a.getValue()))
 													.collect(Collectors.toList());
 
+//			List<CandidateVotes> sortedVotesList = candidateVotes.stream()
+//							.sorted(Comparator.comparing(CandidateVotes::getCandidateName)
+//											.thenComparing(CandidateVotes:: getVotes))
+//									.collect(Collectors.toList());
+			Comparator<CandidateVotes> compareByFirstName = Comparator.comparing( CandidateVotes::getCandidateName );
+
+			Comparator<CandidateVotes> compareByLastName = Comparator.comparing( CandidateVotes::getVotes );
+
+			//Compare by first name and then last name (multiple fields)
+			Comparator<CandidateVotes> compareByNameAndVotes = compareByFirstName.thenComparing(compareByLastName);
+
+//Use Comparator
+			Collections.sort(candidateVotes, compareByNameAndVotes);
+
+			//Collections.sort(candidateVotes);
+
 			result.put(consti, candidateVoteCount);
 			String winner = findWinner(candidateVotes);
 			ConstituencyResult constituencyResult = new ConstituencyResult(winner, candidateVotes);
-			resultData.setResultData(Map.of(consti, constituencyResult));
+
+			resultData.addConstituencyResult(consti, constituencyResult);
 		}
 
 		br.close();
+		brForVoter.close();
 		return resultData;
 	}
 
