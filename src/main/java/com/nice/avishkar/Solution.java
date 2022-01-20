@@ -1,15 +1,11 @@
 package com.nice.avishkar;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
@@ -45,13 +41,10 @@ public class Solution {
 								.distinct()
 										.collect(Collectors.toList());
 
-		Map<String, Map<String,Integer>> result = new HashMap<>();
-
-		//List<String> voterId =
-		for (String consti: constituencies) {
+		for (String constituencyName: constituencies) {
 			List<Voter> voterByConstituency =
 			voterList.stream()
-					.filter(a -> a.constituencyName.equals(consti))
+					.filter(a -> a.constituencyName.equals(constituencyName))
 					.collect(Collectors.toList());
 
 
@@ -72,27 +65,15 @@ public class Solution {
 											.map(a -> new CandidateVotes(a.getKey(), a.getValue()))
 													.collect(Collectors.toList());
 
-//			List<CandidateVotes> sortedVotesList = candidateVotes.stream()
-//							.sorted(Comparator.comparing(CandidateVotes::getCandidateName)
-//											.thenComparing(CandidateVotes:: getVotes))
-//									.collect(Collectors.toList());
 			Comparator<CandidateVotes> compareByCandidateName = Comparator.comparing( CandidateVotes::getCandidateName );
-
 			Comparator<CandidateVotes> compareByVotes = Comparator.comparing( CandidateVotes::getVotes ).reversed();
-
-			//Compare by first name and then last name (multiple fields)
 			Comparator<CandidateVotes> compareByNameAndVotes = compareByVotes.thenComparing(compareByCandidateName);
+			candidateVotes.sort(compareByNameAndVotes);
 
-//Use Comparator
-			Collections.sort(candidateVotes, compareByNameAndVotes);
-
-			//Collections.sort(candidateVotes);
-
-			result.put(consti, candidateVoteCount);
 			String winner = findWinner(candidateVotes);
 			ConstituencyResult constituencyResult = new ConstituencyResult(winner, candidateVotes);
 
-			resultData.addConstituencyResult(consti, constituencyResult);
+			resultData.addConstituencyResult(constituencyName, constituencyResult);
 		}
 
 		br.close();
@@ -120,7 +101,7 @@ public class Solution {
 		return winner;
 	}
 
-	private Function<String, Candidate> mapToCandidate = (line) -> {
+	private final Function<String, Candidate> mapToCandidate = line -> {
 		String[] p = line.split(",");
 		Candidate item = new Candidate();
 		item.setConstituency(p[0]);//<-- this is the first column in the csv file
@@ -128,7 +109,7 @@ public class Solution {
 		return item;
 	};
 
-	private Function<String, Voter> mapToVoter = (line) -> {
+	private final Function<String, Voter> mapToVoter = line -> {
 		String[] p = line.split(",");
 		Voter item = new Voter();
 		item.setVoterId(p[0]);
