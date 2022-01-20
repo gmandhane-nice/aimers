@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,6 +28,7 @@ public class Solution {
 				.skip(1)
 				.map(mapToCandidate)
 				.collect(Collectors.toList());
+
 		InputStream inputFSForVoter = new FileInputStream(votingFile.toFile());
 		BufferedReader brForVoter = new BufferedReader(new InputStreamReader(inputFSForVoter));
 
@@ -36,7 +38,6 @@ public class Solution {
 				.map(mapToVoter)
 				.collect(Collectors.toList());
 
-		// get distinct constituencies
 		List<String> constituencies = candidateList.stream()
 						.map(Candidate::getConstituency)
 								.distinct()
@@ -51,8 +52,8 @@ public class Solution {
 					.filter(a -> a.constituencyName.equals(consti))
 					.collect(Collectors.toList());
 
+
 			Map<String, Integer> candidateVoteCount = new HashMap<>();
-			//List<CandidateVotes> cv = new ArrayList<>();
 			for(Voter voter: voterByConstituency) {
 				String candidateName = voter.getCandidateName();
 				Integer voteCount = candidateVoteCount.get(candidateName);
@@ -62,15 +63,35 @@ public class Solution {
 					candidateVoteCount.put(candidateName, ++voteCount);
 				}
 			}
-			result.put(consti, candidateVoteCount);
 
+			List<CandidateVotes> candidateVotes =
+					candidateVoteCount.entrySet()
+									.stream()
+											.map(a -> new CandidateVotes(a.getKey(), a.getValue()))
+													.collect(Collectors.toList());
+
+			result.put(consti, candidateVoteCount);
+			String winner = findWinner(candidateVotes);
+			ConstituencyResult constituencyResult = new ConstituencyResult(winner, candidateVotes);
+			resultData.setResultData(Map.of(consti, constituencyResult));
 		}
 
 		br.close();
-
-
-
 		return resultData;
+	}
+
+	private String findWinner(List<CandidateVotes> candidateVotes) {
+
+		String winner = candidateVotes
+				.stream()
+				.max(Comparator.comparing(CandidateVotes::getVotes))
+				.orElseGet(() -> new CandidateVotes("NO_WINNER",0))
+				.getCandidateName();
+
+		if(winner.equals("NOTA")) {
+			  // TODO
+		}
+		return winner;
 	}
 
 	private Function<String, Candidate> mapToCandidate = (line) -> {
