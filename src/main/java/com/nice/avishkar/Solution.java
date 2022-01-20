@@ -76,12 +76,12 @@ public class Solution {
 //							.sorted(Comparator.comparing(CandidateVotes::getCandidateName)
 //											.thenComparing(CandidateVotes:: getVotes))
 //									.collect(Collectors.toList());
-			Comparator<CandidateVotes> compareByFirstName = Comparator.comparing( CandidateVotes::getCandidateName );
+			Comparator<CandidateVotes> compareByCandidateName = Comparator.comparing( CandidateVotes::getCandidateName );
 
-			Comparator<CandidateVotes> compareByLastName = Comparator.comparing( CandidateVotes::getVotes );
+			Comparator<CandidateVotes> compareByVotes = Comparator.comparing( CandidateVotes::getVotes ).reversed();
 
 			//Compare by first name and then last name (multiple fields)
-			Comparator<CandidateVotes> compareByNameAndVotes = compareByFirstName.thenComparing(compareByLastName);
+			Comparator<CandidateVotes> compareByNameAndVotes = compareByVotes.thenComparing(compareByCandidateName);
 
 //Use Comparator
 			Collections.sort(candidateVotes, compareByNameAndVotes);
