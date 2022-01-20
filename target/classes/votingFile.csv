@@ -816,19 +816,7 @@ v813,Hingna,p21,BaijayantiJain
 v814,Ulhasnagar,p13,NOTA
 v815,Mukhed,p39,BhooshanKaniyar
 v816,Mukhed,p39,BhaaswarMarar
-v817,Karanja,p46,AnalMalik
-v818,Mukhed,p36,BhaaswarMarar
-v819,Hingna,p20,HiranyaKhatri
-v820,Kaij,p18,AnaghBanerjee
-v821,Karanja,p48,AnalMalik
-v822,Hingna,p22,HiranyaKhatri
-v823,Baglan,p28,NOTA
-v824,Mahad,p40,NOTA
-v825,Kaij,p19,NOTA
-v826,Hingna,p21,ShardaAdiga
-v827,Karanja,p45,AnalMalik
-v828,Ulhasnagar,p11,AnamikaPilla
-v829,Teosa,p5,VinayDeshpande
+v817,Karanja,p46nayDeshpande
 v830,Teosa,p8,AmareshKakkar
 v831,Mahad,p42,AmritaJha
 v832,Mukhed,p38,NOTA
@@ -904,7 +892,19 @@ v901,Hingna,p20,HiranyaKhatri
 v902,Hingna,p23,NOTA
 v903,Teosa,p7,TarunDesai
 v904,Teosa,p9,VinayDeshpande
-v905,Hingna,p21,HiranyaKhatri
+v905,Hingna,p,AnalMalik
+             v818,Mukhed,p36,BhaaswarMarar
+             v819,Hingna,p20,HiranyaKhatri
+             v820,Kaij,p18,AnaghBanerjee
+             v821,Karanja,p48,AnalMalik
+             v822,Hingna,p22,HiranyaKhatri
+             v823,Baglan,p28,NOTA
+             v824,Mahad,p40,NOTA
+             v825,Kaij,p19,NOTA
+             v826,Hingna,p21,ShardaAdiga
+             v827,Karanja,p45,AnalMalik
+             v828,Ulhasnagar,p11,AnamikaPilla
+             v829,Teosa,p5,Vi21,HiranyaKhatri
 v906,Mukhed,p37,NOTA
 v907,Mukhed,p38,BhooshanKaniyar
 v908,Mahad,p43,LakshmanPillai

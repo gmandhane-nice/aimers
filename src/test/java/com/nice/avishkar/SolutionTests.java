@@ -1,5 +1,6 @@
 package com.nice.avishkar;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Duration;
@@ -18,7 +19,7 @@ public class SolutionTests {
 	
     // Run once, execute solution and load resultData
     @BeforeClass
-    public static void initAndExecute() {
+    public static void initAndExecute() throws IOException {
 		Instant start = Instant.now();
         Path candidateFilePath = Paths.get("src/main/resources/candidateFile.csv");
         Path votingFilePath = Paths.get("src/main/resources/votingFile.csv");
