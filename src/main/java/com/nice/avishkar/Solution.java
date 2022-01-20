@@ -22,10 +22,7 @@ public class Solution {
 
   private final Function<String, Candidate> mapToCandidate = line -> {
     String[] p = line.split(",");
-    Candidate item = new Candidate();
-    item.setConstituency(p[0]);//<-- this is the first column in the csv file
-    item.setName(p[1]);
-    return item;
+    return Candidate.createCandidate(p[0],p[1]);
   };
 
   public ElectionResult execute(Path candidateFile, Path votingFile) throws IOException {
@@ -52,7 +49,7 @@ public class Solution {
 
 
     List<String> constituencies = candidateList.stream()
-        .map(Candidate::getConstituency)
+        .map(Candidate::getConstituencyName)
         .distinct()
         .collect(Collectors.toList());
 
