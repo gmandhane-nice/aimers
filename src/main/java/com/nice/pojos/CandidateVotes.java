@@ -1,4 +1,4 @@
-package com.nice.avishkar;
+package com.nice.pojos;
 
 import java.util.Objects;
 

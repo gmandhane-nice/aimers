@@ -1,5 +1,6 @@
-package com.nice.avishkar;
+package com.nice.pojos;
 
+import com.nice.pojos.CandidateVotes;
 import java.util.List;
 
 public class ConstituencyResult {

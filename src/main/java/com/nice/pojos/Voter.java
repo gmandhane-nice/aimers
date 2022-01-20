@@ -1,4 +1,4 @@
-package com.nice.avishkar;
+package com.nice.pojos;
 
 public class Voter {
 

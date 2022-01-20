@@ -1,5 +1,6 @@
 package com.nice.avishkar;
 
+import com.nice.pojos.ConstituencyResult;
 import java.util.Map;
 
 public class ElectionResult {

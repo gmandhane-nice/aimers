@@ -1,5 +1,9 @@
 package com.nice.avishkar;
 
+import com.nice.pojos.Candidate;
+import com.nice.pojos.CandidateVotes;
+import com.nice.pojos.ConstituencyResult;
+import com.nice.pojos.Voter;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
