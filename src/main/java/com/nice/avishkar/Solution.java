@@ -8,7 +8,6 @@ import com.nice.util.ElectionHelper;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -22,32 +21,20 @@ import java.util.stream.Collectors;
 public class Solution {
 
   // in memory cache
-  Map<String, List<Voter>> constituenciesToVoterList = new HashMap<>();
+  final Map<String, List<Voter>> constituenciesToVoterList = new HashMap<>();
 
-  public ElectionResult execute(Path candidateFile, Path votingFile) throws IOException {
+  public ElectionResult execute(Path candidateFile, Path votingFile)  {
     ElectionResult resultData = new ElectionResult(new HashMap<>());
 
-    // construct candidateList
-    InputStream inputFS = new FileInputStream(candidateFile.toFile());
-    BufferedReader br = new BufferedReader(new InputStreamReader(inputFS));
-    List<Candidate> candidateList = br
-        .lines()
-        .skip(1)
-        .map(ElectionHelper.STR_TO_CANDIDATE_FUNCTION)
-        .collect(Collectors.toList());
-    br.close();
+    List<Candidate> candidateList = ElectionHelper.getCandidatesList(candidateFile);
+    if (candidateList.isEmpty()) {
+      System.err.println("No candidates to contesting");
+      return resultData;
+    }
 
-    // construct in memory cache to hold voters constituency wise
-    InputStream inputFSForVoter = new FileInputStream(votingFile.toFile());
-    BufferedReader brForVoter = new BufferedReader(new InputStreamReader(inputFSForVoter));
-    brForVoter
-        .lines()
-        .skip(1)
-        .forEach(this::addVoterToConstituency);
-    brForVoter.close();
-    
+    buildConstituencyToVotersMap(votingFile);
+
     List<String> constituencies = ElectionHelper.getDistinctConstinuencyNames(candidateList);
-
     for (String constituencyName : constituencies) {
       List<Voter> voterByConstituency = constituenciesToVoterList.get(constituencyName);
 
@@ -90,8 +77,20 @@ public class Solution {
     return resultData;
   }
 
+  private void buildConstituencyToVotersMap(Path votingFile) {
+    try(BufferedReader brForVoter = new BufferedReader(new InputStreamReader(new FileInputStream(
+            votingFile.toFile())))) {
+      brForVoter
+          .lines()
+          .skip(1)
+          .forEach(this::addVoterToConstituency);
+    } catch (IOException io) {
+      throw new RuntimeException("Error occurred during processing the files");
+    }
+  }
+
   private void addVoterToConstituency(String a) {
-    Voter voter = buildVoter(a);
+    Voter voter = ElectionHelper.buildVoter(a);
     String constituencyName = voter.getConstituencyName();
     List<Voter> voterByConstituency = constituenciesToVoterList.get(constituencyName);
     if (voterByConstituency == null) {
@@ -101,7 +100,7 @@ public class Solution {
     constituenciesToVoterList.put(constituencyName, voterByConstituency);
   }
 
-  private String findWinner(List<CandidateVotes> candidateVotes) {
+  private static String findWinner(List<CandidateVotes> candidateVotes) {
 
     String winner = "NO_WINNER";
     if (candidateVotes.get(0).getVotes() != candidateVotes.get(1)
@@ -112,16 +111,6 @@ public class Solution {
     return winner;
   }
 
-  private Voter buildVoter(String line) {
-    String[] p = line.split(",");
-    Voter item = new Voter();
-    item.setVoterId(p[0]);
-    item.setConstituencyName(p[1]);
-    item.setPollingStation(p[2]);
-    if (p.length == 4 && p[3] != null && p[3].trim().length() > 0) {
-      item.setCandidateName(p[3]);
-    }
-    return item;
-  }
+
 
 }

@@ -1,6 +1,12 @@
 package com.nice.util;
 
 import com.nice.pojos.Candidate;
+import com.nice.pojos.Voter;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -21,5 +27,32 @@ public class ElectionHelper {
         .map(Candidate::getConstituencyName)
         .distinct()
         .collect(Collectors.toList());
+  }
+
+  public static List<Candidate> getCandidatesList(Path candidateFile) {
+    List<Candidate> candidateList;
+    try(BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(
+        candidateFile.toFile())))) {
+      candidateList = br
+          .lines()
+          .skip(1)
+          .map(ElectionHelper.STR_TO_CANDIDATE_FUNCTION)
+          .collect(Collectors.toList());
+    } catch (IOException io) {
+      throw new RuntimeException("Error occurred during processing the files");
+    }
+    return candidateList;
+  }
+
+  public static Voter buildVoter(String line) {
+    String[] p = line.split(",");
+    Voter item = new Voter();
+    item.setVoterId(p[0]);
+    item.setConstituencyName(p[1]);
+    item.setPollingStation(p[2]);
+    if (p.length == 4 && p[3] != null && p[3].trim().length() > 0) {
+      item.setCandidateName(p[3]);
+    }
+    return item;
   }
 }
