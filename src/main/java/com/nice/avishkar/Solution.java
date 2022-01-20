@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class Solution {
@@ -46,12 +45,8 @@ public class Solution {
         .skip(1)
         .forEach(this::addVoterToConstituency);
     brForVoter.close();
-
-
-    List<String> constituencies = candidateList.stream()
-        .map(Candidate::getConstituencyName)
-        .distinct()
-        .collect(Collectors.toList());
+    
+    List<String> constituencies = ElectionHelper.getDistinctConstinuencyNames(candidateList);
 
     for (String constituencyName : constituencies) {
       List<Voter> voterByConstituency = constituenciesToVoterList.get(constituencyName);
