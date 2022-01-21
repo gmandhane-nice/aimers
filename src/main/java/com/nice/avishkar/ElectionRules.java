@@ -25,7 +25,7 @@ public class ElectionRules {
         sanitisedCandidateList.remove(candidate);
         continue;
       }
-      candidates.add(candidate.getCandidateName());
+      candidates.add(candidateName);
       sanitisedCandidateList.add(candidate);
     }
     return sanitisedCandidateList;
