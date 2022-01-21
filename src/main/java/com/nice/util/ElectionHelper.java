@@ -29,21 +29,6 @@ public class ElectionHelper {
         .collect(Collectors.toList());
   }
 
-  public static List<Candidate> getCandidatesList(Path candidateFile) {
-    List<Candidate> candidateList;
-    try(BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(
-        candidateFile.toFile())))) {
-      candidateList = br
-          .lines()
-          .skip(1)
-          .map(ElectionHelper.STR_TO_CANDIDATE_FUNCTION)
-          .collect(Collectors.toList());
-    } catch (IOException io) {
-      throw new RuntimeException("Error occurred during processing the files");
-    }
-    return candidateList;
-  }
-
   public static Voter buildVoter(String line) {
     String[] p = line.split(",");
     Voter item = new Voter();
