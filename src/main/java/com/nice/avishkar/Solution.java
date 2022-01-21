@@ -11,11 +11,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class Solution {
@@ -48,7 +46,6 @@ public class Solution {
           candidateVoteCount.put(candidateName, ++voteCount);
         }
       }
-      Integer notaCount = candidateVoteCount.remove("NOTA");
 
       List<CandidateVotes> candidateVotes =
           candidateVoteCount.entrySet()
@@ -56,25 +53,31 @@ public class Solution {
               .map(a -> new CandidateVotes(a.getKey(), a.getValue()))
               .collect(Collectors.toList());
 
-      Comparator<CandidateVotes> compareByCandidateName = Comparator.comparing(
-          CandidateVotes::getCandidateName);
-      Comparator<CandidateVotes> compareByVotes = Comparator.comparing(CandidateVotes::getVotes
-          ).reversed();
-      Comparator<CandidateVotes> compareByNameAndVotes = compareByVotes.thenComparing(
-          compareByCandidateName);
-      candidateVotes.sort(compareByNameAndVotes);
+      performCandidateSorting(candidateVotes);
 
       String winner = findWinner(candidateVotes);
-      if (Optional.ofNullable(notaCount).orElse(-1) != -1) {
-        candidateVotes.add(new CandidateVotes("NOTA", notaCount));
-      }
-
       ConstituencyResult constituencyResult = new ConstituencyResult(winner, candidateVotes);
 
       resultData.addConstituencyResult(constituencyName, constituencyResult);
     }
 
     return resultData;
+  }
+
+  private void performCandidateSorting(List<CandidateVotes> candidateVotes) {
+    candidateVotes.sort((p1, p2) -> {
+
+      if (p1.getCandidateName().equals("NOTA")) {
+        return 1;
+      } else if (p2.getCandidateName().equals("NOTA")) {
+        return -1;
+      }
+      long voteCount = p2.getVotes() - p1.getVotes();
+      if (voteCount != 0) {
+        return (int) voteCount;
+      }
+      return p1.getCandidateName().compareTo(p2.getCandidateName());
+    });
   }
 
   private void buildConstituencyToVotersMap(Path votingFile) {
