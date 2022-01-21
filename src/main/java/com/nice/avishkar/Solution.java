@@ -14,10 +14,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import java.util.stream.Collectors;
 
 public class Solution {
 
+  private static final Logger logger = LogManager.getLogger(Solution.class);
   // in memory cache
   final Map<String, List<Voter>> constituenciesToVoterList = new HashMap<>();
 
@@ -26,7 +29,7 @@ public class Solution {
 
     List<Candidate> candidateList = ElectionHelper.getCandidatesList(candidateFile);
     if (candidateList.isEmpty()) {
-      System.err.println("No candidates to contesting");
+      logger.warn("No candidates to contesting");
       return resultData;
     }
 
