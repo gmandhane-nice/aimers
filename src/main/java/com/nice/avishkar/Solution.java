@@ -35,9 +35,10 @@ public class Solution {
       return resultData; // empty result
     }
 
+    List<Candidate> sanitisedCandidateList = ElectionRules.sanitiseCandidates(candidateList);
     buildConstituencyToVotersMap(votingFile);
 
-    List<String> constituencies = ElectionHelper.getDistinctConstinuencyNames(candidateList);
+    List<String> constituencies = ElectionHelper.getDistinctConstinuencyNames(sanitisedCandidateList);
     Set<String> voterIds = new HashSet<>();
     for (String constituencyName : constituencies) {
       List<Voter> voterByConstituency = constituenciesToVoterList.get(constituencyName);
