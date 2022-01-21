@@ -2,25 +2,20 @@ package com.nice.util;
 
 import com.nice.pojos.Candidate;
 import com.nice.pojos.Voter;
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.file.Path;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class ElectionHelper {
 
+  public static final Function<String, Candidate> STR_TO_CANDIDATE_FUNCTION = line -> {
+    String[] p = line.split(",");
+    return Candidate.createCandidate(p[0], p[1]);
+  };
+
   private ElectionHelper() {
     // avoid instantiation
   }
-
-  public static final Function<String, Candidate> STR_TO_CANDIDATE_FUNCTION = line -> {
-    String[] p = line.split(",");
-    return Candidate.createCandidate(p[0],p[1]);
-  };
 
   public static List<String> getDistinctConstinuencyNames(List<Candidate> candidateList) {
     return candidateList.stream()

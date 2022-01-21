@@ -3,6 +3,7 @@ package com.nice.pojos;
 import java.util.Objects;
 
 public class Candidate {
+
   String constituencyName;
   String candidateName;
 
@@ -11,23 +12,23 @@ public class Candidate {
     this.candidateName = candidateName;
   }
 
+  /**
+   * Static factory method to create candidate object
+   *
+   * @param constituencyName name of constituency
+   * @param candidateName    name of candidate
+   * @return {@Code Candidate}
+   */
+  public static Candidate createCandidate(String constituencyName, String candidateName) {
+    return new Candidate(constituencyName, candidateName);
+  }
+
   public String getCandidateName() {
     return candidateName;
   }
 
   public String getConstituencyName() {
     return constituencyName;
-  }
-
-  /**
-   * Static factory method to create candidate object
-   *
-   * @param constituencyName name of constituency
-   * @param candidateName name of candidate
-   * @return {@Code Candidate}
-   */
-  public static Candidate createCandidate(String constituencyName, String candidateName) {
-    return new Candidate(constituencyName, candidateName);
   }
 
   @Override

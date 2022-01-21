@@ -23,10 +23,6 @@ public class Voter {
     this.constituencyName = constituencyName;
   }
 
-  public String getPollingStation() {
-    return pollingStation;
-  }
-
   public void setPollingStation(String pollingStation) {
     this.pollingStation = pollingStation;
   }
@@ -38,7 +34,14 @@ public class Voter {
   public void setCandidateName(String candidateName) {
     this.candidateName = candidateName;
   }
+
+  @Override
+  public String toString() {
+    return "Voter{" +
+        "voterId='" + voterId + '\'' +
+        ", constituencyName='" + constituencyName + '\'' +
+        ", pollingStation='" + pollingStation + '\'' +
+        ", candidateName='" + candidateName + '\'' +
+        '}';
+  }
 }
-
-
-// candidate -> votes

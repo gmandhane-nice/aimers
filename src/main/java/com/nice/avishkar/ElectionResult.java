@@ -5,37 +5,27 @@ import java.util.Map;
 
 public class ElectionResult {
 
-	private Map<String, ConstituencyResult> resultData;
-	
-	public ElectionResult() {
-		super();
-	}
+  private final Map<String, ConstituencyResult> resultData;
 
-	public ElectionResult(Map<String, ConstituencyResult> resultData) {
-		super();
-		this.resultData = resultData;
-	}
+  public ElectionResult(Map<String, ConstituencyResult> resultData) {
+    super();
+    this.resultData = resultData;
+  }
 
-	public Map<String, ConstituencyResult> getResultData() {
-		return resultData;
-	}
+  public Map<String, ConstituencyResult> getResultData() {
+    return resultData;
+  }
 
-	public void setResultData(Map<String, ConstituencyResult> resultData) {
-		this.resultData = resultData;
-	}
+  @Override
+  public String toString() {
+    StringBuilder builder = new StringBuilder();
+    builder.append("ElectionResult [resultData=");
+    builder.append(resultData);
+    builder.append("]");
+    return builder.toString();
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("ElectionResult [resultData=");
-		builder.append(resultData);
-		builder.append("]");
-		return builder.toString();
-	}
-
-	public void addConstituencyResult(String constituencyName, ConstituencyResult result) {
-		resultData.put(constituencyName, result);
-	}
-
-	
+  public void addConstituencyResult(String constituencyName, ConstituencyResult result) {
+    resultData.put(constituencyName, result);
+  }
 }

@@ -13,6 +13,7 @@ public class Solution {
   private static final Logger logger = LogManager.getLogger(Solution.class);
 
   public ElectionResult execute(Path candidateFilePath, Path votingFilePath) {
+    logger.info("Started execution");
     ElectionProcessor processor = new ElectionProcessor(new DefaultSortingStrategy(),
         new DefaultWinnerComputationStrategy(), new CsvParser(candidateFilePath));
 

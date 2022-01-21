@@ -7,6 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 public interface Parser {
-  public  List<Candidate> parseCandidates(Path path);
+  List<Candidate> parseCandidates(Path path);
   Map<String, List<Voter>> parseVoters(Path path);
 }
