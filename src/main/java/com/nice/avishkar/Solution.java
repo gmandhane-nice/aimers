@@ -12,8 +12,10 @@ import java.io.InputStreamReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.util.stream.Collectors;
@@ -29,18 +31,26 @@ public class Solution {
 
     List<Candidate> candidateList = ElectionHelper.getCandidatesList(candidateFile);
     if (candidateList.isEmpty()) {
-      logger.warn("No candidates to contesting");
-      return resultData;
+      logger.warn("No candidates found to contest the elections ");
+      return resultData; // empty result
     }
 
     buildConstituencyToVotersMap(votingFile);
 
     List<String> constituencies = ElectionHelper.getDistinctConstinuencyNames(candidateList);
+    Set<String> voterIds = new HashSet<>();
     for (String constituencyName : constituencies) {
       List<Voter> voterByConstituency = constituenciesToVoterList.get(constituencyName);
 
       Map<String, Integer> candidateVoteCount = new HashMap<>();
       for (Voter voter : voterByConstituency) {
+        boolean hasVoted = voterIds.contains(voter.getVoterId());
+        if (hasVoted) {
+          logger.warn("Disqualified voter with id: {}", () -> voter.getVoterId());
+          continue;
+        }
+
+        voterIds.add(voter.getVoterId());
         String candidateName = voter.getCandidateName();
         Integer voteCount = candidateVoteCount.get(candidateName);
         if (voteCount == null) {
