@@ -53,7 +53,7 @@ public class ElectionProcessor {
   public ElectionResult computeElectionResult(
       Map<String, List<Voter>> constituenciesToVoterList, List<Candidate> candidateList) {
     ElectionResult resultData = new ElectionResult(new HashMap<>());
-    List<String> constituencies = ElectionHelper.getDistinctConstinuencyNames(candidateList);
+    Set<String> constituencies = constituenciesToVoterList.keySet();
     Set<String> voterIds = new HashSet<>();
     for (String constituencyName : constituencies) {
       List<Voter> voterByConstituency = constituenciesToVoterList.get(constituencyName);
