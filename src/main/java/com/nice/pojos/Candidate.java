@@ -7,7 +7,7 @@ public class Candidate {
   String constituencyName;
   String candidateName;
 
-  public Candidate(String constituencyName, String candidateName) {
+  private Candidate(String constituencyName, String candidateName) {
     this.constituencyName = constituencyName;
     this.candidateName = candidateName;
   }
